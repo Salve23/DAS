@@ -1,0 +1,148 @@
+import java.util.Scanner;
+
+class LP {
+    private int currentSize, maxSize;
+    private String[] keys;
+    private String[] values;
+
+    public LP(int capacity) {
+        maxSize = capacity;
+        currentSize = 0;
+        keys = new String[maxSize];
+        values = new String[maxSize];
+    }
+
+    public void makeEmpty() {
+        currentSize = 0;
+        keys = new String[maxSize];
+        values = new String[maxSize];
+    }
+
+    public int getSize() {
+        return currentSize;
+    }
+
+    public boolean isFull() {
+        return currentSize == maxSize;
+    }
+
+    public boolean isEmpty() {
+        return getSize() == 0;
+    }
+
+    public boolean contains(String k) {
+        return get(k) != null;
+    }
+
+    private int hash(int k) {
+        return k % maxSize;
+    }
+
+    public void insert(String k, String v) {
+        if (isFull()) {
+            System.out.println("Hash Table is full. Cannot insert.");
+            return;
+        }
+        int tmp = hash(k.hashCode());
+        int i = tmp;
+        do {
+            if (keys[i] == null) {
+                keys[i] = k;
+                values[i] = v;
+                currentSize++;
+                return;
+            }
+            if (keys[i].equals(k)) {
+                values[i] = v;
+                return;
+            }
+            i = (i + 1) % maxSize;
+        } while (i != tmp);
+    }
+
+    public String get(String k) {
+        int i = hash(k.hashCode());
+        while (keys[i] != null) {
+            if (keys[i].equals(k)) {
+                return values[i];
+            }
+            i = (i + 1) % maxSize;
+        }
+        return null;
+    }
+
+    public void remove(String k) {
+        if (!contains(k)) {
+            System.out.println("Key not found.");
+            return;
+        }
+        int i = hash(k.hashCode());
+        while (!k.equals(keys[i])) {
+            i = (i + 1) % maxSize;
+        }
+        keys[i] = null;
+        values[i] = null;
+        currentSize--;
+        for (i = (i + 1) % maxSize; keys[i] != null; i = (i + 1) % maxSize) {
+            String tempKey = keys[i];
+            String tempValue = values[i];
+            keys[i] = null;
+            values[i] = null;
+            currentSize--;
+            insert(tempKey, tempValue);
+        }
+    }
+
+    public void printHash() {
+        System.out.println("\n\tThis Is The Hash Table\n");
+        System.out.println("Keys | values");
+        for (int i = 0; i < maxSize; i++) {
+            if (keys[i] != null) {
+                System.out.println(keys[i] + "   |   " + values[i]);
+            }
+        }
+    }
+}
+
+public class HashTable {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the Table size :");
+        LP l = new LP(sc.nextInt());
+        char ch;
+
+        do {
+            System.out.println("\n\tHASH TABLE OPERATIONS \n");
+            System.out.println("1.Insert \n2.Remove \n3.Get \n4.Clear \n5.Size ");
+            int choice = sc.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter The Key & Value");
+                    l.insert(sc.next(), sc.next());
+                    break;
+                case 2:
+                    System.out.println("Enter The Key To Remove");
+                    l.remove(sc.next());
+                    break;
+                case 3:
+                    System.out.println("Enter the key ");
+                    String value = l.get(sc.next());
+                    System.out.println("Value = " + (value != null ? value : "Not found"));
+                    break;
+                case 4:
+                    l.makeEmpty();
+                    System.out.println("Hash Table is Fully Cleared");
+                    break;
+                case 5:
+                    System.out.println("Current Size Of Hash Table: " + l.getSize());
+                    break;
+                default:
+                    System.out.println("WRONG ENTRY \n");
+                    break;
+            }
+            l.printHash();
+            System.out.println("Do You want to continue? Press (1) for Yes, any other key to exit.");
+            ch = sc.next().charAt(0);
+        } while (ch == '1');
+    }
+}
