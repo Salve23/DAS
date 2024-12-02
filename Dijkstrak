@@ -1,0 +1,79 @@
+import java.util.Scanner;
+
+public class Dijkstrak {
+
+    private int TVertex;
+
+    public Dijkstrak(int TVertex) {
+        this.TVertex = TVertex;
+    }
+
+    public int min(int[] dis, boolean[] vis) {
+        int min = Integer.MAX_VALUE;
+        int minIndex = -1;
+
+        for (int vx = 0; vx < TVertex; vx++) {
+            if (!vis[vx] && dis[vx] < min) {
+                min = dis[vx];
+                minIndex = vx;
+            }
+        }
+
+        return minIndex;
+    }
+
+    public void display(int[] dis) {
+        System.out.println("Vertex Distance from Source");
+        for (int j = 0; j < TVertex; j++) {
+            System.out.println(j + " \t\t " + dis[j]);
+        }
+    }
+
+    public void dijkstra(int[][] graph, int s) {
+        int[] dis = new int[TVertex];
+        boolean[] vis = new boolean[TVertex];
+
+        for (int j = 0; j < TVertex; j++) {
+            dis[j] = Integer.MAX_VALUE;
+            vis[j] = false;
+        }
+
+        dis[s] = 0;
+
+        for (int count = 0; count < TVertex - 1; count++) {
+            int ux = min(dis, vis);
+            vis[ux] = true;
+
+            for (int vx = 0; vx < TVertex; vx++) {
+                if (!vis[vx] && graph[ux][vx] != 0 && dis[ux] != Integer.MAX_VALUE &&
+                    dis[ux] + graph[ux][vx] < dis[vx]) {
+                    dis[vx] = dis[ux] + graph[ux][vx];
+                }
+            }
+        }
+
+        display(dis);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the number of vertices: ");
+        int TVertex = sc.nextInt();
+
+        Dijkstrak a = new Dijkstrak(TVertex);
+
+        int[][] graph = new int[TVertex][TVertex];
+
+        for (int i = 0; i < TVertex; i++) {
+            for (int j = 0; j < TVertex; j++) {
+                System.out.print("Enter the element for graph[" + i + "][" + j + "]: ");
+                graph[i][j] = sc.nextInt();
+            }
+        }
+
+        a.dijkstra(graph, 0);
+
+        sc.close(); // Optional based on your preference
+    }
+}
