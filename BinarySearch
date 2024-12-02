@@ -1,0 +1,199 @@
+import java.util.*;
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int data) 
+    {
+        this.data = data;
+        right = left = null;
+    }
+}
+class BinarySearch {
+    Node root;
+    public void insert(int data) 
+    {
+        root = insert(root, data);
+    }
+
+    private Node insert(Node root, int data) 
+    {
+        if (root == null) 
+        {
+            root = new Node(data);
+            return root;
+        }
+
+        if (data < root.data) 
+        {
+            root.left = insert(root.left, data);
+        } 
+        else 
+        {
+            root.right = insert(root.right, data);
+        }
+
+        return root;
+    }
+
+    public void display(Node node) 
+    {
+        if (node != null) 
+        {
+            display(node.left);
+            System.out.println(node.data);
+            display(node.right);
+        }
+    }
+
+    public int findMin(Node node) 
+    {
+        if (node.left == null) 
+        {
+            return node.data;
+        } 
+        else 
+        {
+            return findMin(node.left);
+        }
+    }
+
+    public int findMax(Node node) 
+    {
+        if (node.right == null) 
+        {
+            return node.data;
+        } 
+        else 
+        {
+            return findMax(node.right);
+        }
+    }
+
+    public void searchElement(Node node, int a) 
+    {
+        if (search(node, a)) 
+        {
+            System.out.println("Element is present!");
+        } 
+        else 
+        {
+            System.out.println("Element is absent");
+        }
+    }
+
+    public boolean search(Node node, int a) 
+    {
+        if (node == null) 
+        {
+            return false;
+        }
+
+        if (node.data == a) 
+        {
+            return true;
+        }
+
+        if (a < node.data) 
+        {
+            return search(node.left, a);
+        } 
+        else 
+        {
+            return search(node.right, a);
+        }
+    }
+
+    public Node delete(Node root, int b)
+    {
+        if (root == null)
+        {
+            return root;
+        }
+
+        if(b > root.data){
+            root.right = delete(root.right,b);
+        }
+
+        else if(b < root.data){
+            root.left = delete(root.left,b);
+        }
+        else{
+           if (root.left == null){
+                return root.right;
+           } 
+           else if (root.right == null){
+                return root.left;
+           }
+
+           root.data = findMin(root.right);
+           root.right = delete(root.right, root.data);
+        }
+        return root;
+    }
+}
+
+public class BinarySearchT {
+    public static void main(String[] args) {
+        BinarySearch bst = new BinarySearch();
+        Scanner sc = new Scanner(System.in);
+        int again;
+        do {
+            System.out.println("Enter The Option \n1. Insert \n2. Display \n3. Min \n4. Max\n5. Search \n6. Delete");
+            int choice = sc.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter the Element:");
+                    int element = sc.nextInt();
+                    bst.insert(element);
+                    System.out.println("Element Inserted");
+                    break;
+
+                case 2:
+                    System.out.println("The elements are:");
+                    bst.display(bst.root);
+                    break;
+
+                case 3:
+                    System.out.println("The Min Element is: " + bst.findMin(bst.root));
+                    break;
+
+                case 4:
+                    System.out.println("The Max Element is: " + bst.findMax(bst.root));
+                    break;
+
+                case 5:
+                    System.out.println("Enter the Element to Search:");
+                    int a = sc.nextInt();
+                    bst.searchElement(bst.root, a);
+                    break;
+
+                case 6:
+                    System.out.println("Enter the Element to Delete:");
+                    int b = sc.nextInt();
+                    bst.root = bst.delete(bst.root, b);
+                    System.out.println("Element is deleted !");
+                    break;
+
+
+                default:
+                    System.out.println("Invalid Option");
+                    break;
+            }
+            System.out.println("Continue? 1 - Yes, 0 - No");
+            again = sc.nextInt();
+        } while (again == 1);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
