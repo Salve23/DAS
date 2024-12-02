@@ -1,0 +1,159 @@
+import java.util.Scanner;
+
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int data) {
+        this.data = data;
+        left = right = null;
+    }
+}
+
+class Binary {
+    Node root;
+
+    public void insert(int data) {
+        Node newNode = new Node(data);
+        if (root == null) {
+            root = newNode;
+        } else {
+            whereToInsert(root, newNode);
+        }
+    }
+
+    private void whereToInsert(Node currNode, Node newNode) {
+        @SuppressWarnings("resource")
+        Scanner sc = new Scanner(System.in);
+        int c;
+        do {
+            System.out.println("Where you want to insert 1.Left 2.Right");
+            int b = sc.nextInt();
+            if (b == 1) {
+                if (currNode.left == null) {
+                    currNode.left = newNode;
+                    break;
+                }
+                currNode = currNode.left;
+            } else if (b == 2) {
+                if (currNode.right == null) {
+                    currNode.right = newNode;
+                    break;
+                }
+                currNode = currNode.right;
+            } else {
+                System.out.println("Enter a valid choice:");
+            }
+            System.out.println("Do you want to continue 1.Yes , 0.No");
+            c = sc.nextInt();
+        } while (c != 0);
+    }
+
+    public void display() {
+        System.out.println("Inorder Traversal");
+        inOrder(root);
+    }
+
+    private void inOrder(Node root) {
+        if (root == null) {
+            return;
+        }
+        inOrder(root.left);
+        System.out.println(root.data);
+        inOrder(root.right);
+    }
+
+    public int countNodes() {
+        return count(root);
+    }
+
+    private int count(Node node) {
+        if (node == null)
+            return 0;
+        return 1 + count(node.left) + count(node.right);
+    }
+
+    private void printLeftLeaves(Node node) {
+        if (node == null) {
+            return;
+        }
+        if (node.left != null && node.left.left == null && node.left.right == null) {
+            System.out.println(node.left.data);
+        }
+        printLeftLeaves(node.left);
+        printLeftLeaves(node.right);
+    }
+
+    public void printLeftLeaves() {
+        printLeftLeaves(root);
+    }
+
+    public int countLeaves() {
+        return countLeaves(root);
+    }
+
+    private int countLeaves(Node node) {
+        if (node == null) {
+            return 0;
+        } else if (node.left == null && node.right == null) {
+            return 1;
+        } else {
+            return countLeaves(node.left) + countLeaves(node.right);
+        }
+    }
+
+    public int height() {
+        return height(root);
+    }
+
+    private int height(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        int leftHeight = height(node.left);
+        int rightHeight = height(node.right);
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+}
+
+public class BinaryTree {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Binary b = new Binary();
+        int again;
+        do {
+            System.out.println("Enter the operation you want to perform: \n 1.Insertion \n 2.Display\n 3.Count Nodes\n 4.Print Left Leaves\n 5.Count Leaves\n 6.Height of the Tree");
+            int choice = sc.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter the element you want to insert");
+                    int a = sc.nextInt();
+                    b.insert(a);
+                    break;
+                case 2:
+                    System.out.println("Here's the display elements");
+                    b.display();
+                    break;
+                case 3:
+                    System.out.println("Number of nodes: " + b.countNodes());
+                    break;
+                case 4:
+                    System.out.println("Left Leaves:");
+                    b.printLeftLeaves();
+                    break;
+                case 5:
+                    System.out.println("Number of leaves: " + b.countLeaves());
+                    break;
+                case 6:
+                    System.out.println("Height of the tree: " + b.height());
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            }
+            System.out.println("Do you want to continue 1.Yes , 0.No");
+            again = sc.nextInt();
+        } while (again == 1);
+        sc.close();
+    }
+}
