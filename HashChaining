@@ -1,0 +1,95 @@
+import java.util.LinkedList;
+import java.util.Scanner;
+
+class Hashh{
+    private int size;
+    private LinkedList<Integer>[] table;
+
+    @SuppressWarnings("unchecked")
+    public Hashh(int size) {
+        this.size = size;
+        table = new LinkedList[size];
+        for (int i = 0; i < size; i++) {
+            table[i] = new LinkedList<>();
+        }
+    }
+
+    private int hash(int key) {
+        return key % size;
+    }
+
+    public void insert(int key) {
+        int index = hash(key);
+        table[index].add(key);
+        System.out.println("Inserted key " + key + " at index " + index);
+    }
+
+    public void display() {
+        for (int i = 0; i < size; i++) {
+            System.out.print("Index " + i + " -> ");
+            for (int key : table[i]) {
+                System.out.print(key + " -> ");
+            }
+            System.out.println("null");
+        }
+    }
+
+    public boolean search(int key) {
+        int index = hash(key);
+        return table[index].contains(key);
+    }
+}
+
+public class HashChaining {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter the size of HashTable: ");
+        int tableSize = sc.nextInt();
+
+        Hashh hashTable = new Hashh(tableSize);
+
+        System.out.println("Enter the number of keys to insert: ");
+        int numKeys = sc.nextInt();
+
+        for (int i = 0; i < numKeys; i++) {
+            System.out.println("Enter key " + (i + 1) + ": ");
+            int key = sc.nextInt();
+            hashTable.insert(key);
+        }
+
+        while (true) {
+            System.out.println("Enter the operation you want to perform:");
+            System.out.println("1. Insert");
+            System.out.println("2. Display");
+            System.out.println("3. Search");
+            System.out.println("4. Exit");
+            int choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter the Element to insert: ");
+                    int newKey = sc.nextInt();
+                    hashTable.insert(newKey);
+                    break;
+                case 2:
+                    hashTable.display();
+                    break;
+                case 3:
+                    System.out.println("Enter the key to search: ");
+                    int searchKey = sc.nextInt();
+                    if(hashTable.search(searchKey)){
+                        System.out.println("Key found.");
+                    }else{
+                        System.out.println("Key not found.");
+                    }
+                    break;
+                case 4:
+                    System.out.println("Exiting");
+                    return;
+                default:
+                    System.out.println("Invalid choice, try again.");
+            }
+        }
+    }
+}
